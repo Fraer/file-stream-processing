@@ -79,7 +79,7 @@ public class MainController {
                                     }
                                 });
                         return Flux.concat(contents, Flux.just("done").map(x -> {
-                            var predictions = runPredictions(sr, 10);
+                            var predictions = runPredictions(sr);
                             return new ResponseChunk(predictions, -1, -1);
                         }));
                     }
@@ -111,7 +111,7 @@ public class MainController {
         });
     }
 
-    private String runPredictions(SimpleRegression sr, int runs) {
+    private String runPredictions(SimpleRegression sr) {
         StringBuilder sb = new StringBuilder();
         // Display the intercept of the regression
         sb.append("Intercept: " + sr.getIntercept());
@@ -131,10 +131,9 @@ public class MainController {
         sb.append("\n");
         sb.append("");
         Random r = new Random();
-        double rangeMin = 10000d;
-        double rangeMax = 80000d;
-        for (int i = 0 ; i < runs ; i++) {
-            double rn = rangeMin + (rangeMax - rangeMin) * r.nextDouble();
+        double[] inputs = new double[]{10, 300, 500, 850, 1500, 3000, 5500, 9000, 15000, 25000};
+        for (int i = 0 ; i < inputs.length ; i++) {
+            double rn = inputs[i];
             sb.append("Input score: " + rn + " prediction: " + Math.round(sr.predict(rn)));
             sb.append("\n");
         }
